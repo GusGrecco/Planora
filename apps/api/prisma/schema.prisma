@@ -1,0 +1,148 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum TaskStatus {
+  TODO
+  DOING
+  DONE
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model User {
+  id    String @id @default(uuid())
+  email String @unique
+
+  tasks         Task[]
+  taskTemplates TaskTemplate[]
+  taskReminders TaskReminder[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Task {
+  id           String       @id @default(uuid())
+  userId       String
+  title        String
+  description  String?
+  status       TaskStatus   @default(TODO)
+  priority     TaskPriority @default(MEDIUM)
+  parentTaskId String?
+  templateId   String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parentTask Task?         @relation("TaskHierarchy", fields: [parentTaskId], references: [id], onDelete: Cascade)
+  subTasks   Task[]        @relation("TaskHierarchy")
+  template   TaskTemplate? @relation(fields: [templateId], references: [id], onDelete: SetNull)
+
+  executions     TaskExecution[]
+  history        TaskHistory[]
+  reminders      TaskReminder[]
+  templateUsages TemplateUsage[]
+
+  @@index([userId])
+  @@index([userId, status])
+  @@index([userId, parentTaskId])
+  @@index([userId, createdAt])
+  @@index([templateId])
+}
+
+model TaskExecution {
+  id          String    @id @default(uuid())
+  taskId      String
+  startedAt   DateTime
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([taskId])
+  @@index([taskId, startedAt])
+}
+
+model TaskHistory {
+  id             String      @id @default(uuid())
+  taskId         String
+  previousStatus TaskStatus?
+  newStatus      TaskStatus
+  createdAt      DateTime    @default(now())
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([taskId, createdAt])
+}
+
+model TaskTemplate {
+  id          String       @id @default(uuid())
+  userId      String
+  title       String
+  description String?
+  priority    TaskPriority @default(MEDIUM)
+  lastUsedAt  DateTime?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  user   User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items  TaskTemplateItem[]
+  usages TemplateUsage[]
+  tasks  Task[]
+
+  @@index([userId])
+  @@index([userId, lastUsedAt])
+}
+
+model TaskTemplateItem {
+  id          String   @id @default(uuid())
+  templateId  String
+  title       String
+  description String?
+  position    Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  template TaskTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  @@index([templateId, position])
+}
+
+model TemplateUsage {
+  id         String   @id @default(uuid())
+  templateId String
+  taskId     String
+  usedAt     DateTime @default(now())
+
+  template TaskTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  task     Task         @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([templateId, usedAt])
+}
+
+model TaskReminder {
+  id              String   @id @default(uuid())
+  taskId          String
+  userId          String
+  scheduledAt     DateTime
+  enabled         Boolean  @default(true)
+  calendarEventId String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([taskId])
+  @@index([userId, scheduledAt])
+}
