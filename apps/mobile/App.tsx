@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 
-import { AppProviders } from "./src/app/app-providers";
+import { AppProviders } from "./src/app/providers";
 
 export default function App() {
   return (
