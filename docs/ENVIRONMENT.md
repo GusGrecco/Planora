@@ -452,7 +452,39 @@ git status
 
 The working tree should be clean unless there are intentional changes.
 
-## 18. Troubleshooting Workflow
+## 18. Mobile Environment Variables
+
+Planora mobile uses Expo's built-in `.env` support (no additional library required).
+
+### Naming convention
+
+`EXPO_PUBLIC_<DOMAIN>_<NAME>` — only variables prefixed with `EXPO_PUBLIC_` are
+exposed to the client bundle. Do not place secrets in mobile environment
+variables, prefixed or not — the bundle can be inspected on device.
+
+### Setup
+
+1. Copy `apps/mobile/.env.example` to `apps/mobile/.env`.
+2. Adjust values for your local environment (use your machine's LAN IP instead
+   of `localhost` when testing on a physical device or Expo Go).
+3. Restart the Expo dev server after changing `.env` (`pnpm expo start -c` to
+   clear the cache if values don't seem to update).
+
+### Required variables
+
+| Variable                | Description                          | Example                 |
+|--------------------------|---------------------------------------|--------------------------|
+| `EXPO_PUBLIC_API_URL`    | Base URL of the Planora API           | `http://localhost:3000` |
+
+### Rules
+
+- Never commit `.env`. Commit `.env.example` instead.
+- Values are validated at startup via `src/config/env.ts` (Zod) — the app
+  fails fast with a clear error if a required variable is missing or invalid.
+- Production/preview environment strategy (EAS build profiles, secret
+  management) is defined in a separate issue.
+
+## 19. Troubleshooting Workflow
 
 1. Read the complete error.
 2. Identify the layer: package manager, environment variable, port, Docker, Prisma, TypeScript, Expo, or Git.
