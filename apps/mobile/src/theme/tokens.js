@@ -77,6 +77,42 @@ const borderRadius = {
     full: 9999,
 };
 
+// Adiciona ao objeto colors/fontSize/spacing/etc. já existente:
+
+const fontFamily = {
+    // System default for now (San Francisco / Roboto). Swapping to a
+    // custom font later only requires updating these values plus loading
+    // it via useFonts — no consumer of `typography.ts` needs to change.
+    sans: undefined, // undefined = RN falls back to the system font
+};
+
+const fontWeight = /** @type {const} */ ({
+    regular: "400",
+    medium: "500",
+    semibold: "600",
+    bold: "700",
+});
+
+// Expressed as unitless multipliers of fontSize, not fixed px, so line
+// height scales correctly across all fontSize tokens.
+const lineHeight = {
+    tight: 1.2,
+    normal: 1.4,
+    relaxed: 1.6,
+};
+
+module.exports = {
+    colors,
+    fontSize,
+    fontFamily,
+    fontWeight,
+    lineHeight,
+    spacing,
+    sizing,
+    borderRadius,
+    elevation,
+};
+
 /**
  * Elevation levels. React Native has no unified cross-platform shadow API
  * (iOS: shadowColor/shadowOffset/shadowOpacity/shadowRadius; Android:
