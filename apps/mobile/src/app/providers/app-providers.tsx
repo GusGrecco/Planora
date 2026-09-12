@@ -21,6 +21,7 @@ import { SafeAreaProvider } from "./safe-area-provider";
  * documented above up to date.
  */
 export function AppProviders({ children }: PropsWithChildren) {
+   console.log(">>> APP PROVIDERS RENDERING");
   return (
     <SafeAreaProvider>
       <QueryProvider>
