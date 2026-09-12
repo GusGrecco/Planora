@@ -2,17 +2,19 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { NavigatorScreenParams } from "@react-navigation/native";
 
 import type { AuthStackParamList } from "./auth/types";
+import type { MainTabParamList } from "./main/types";
 import type { OnboardingStackParamList } from "./onboarding/types";
 
 /**
- * Temporary root param list — currently hosts Auth and Onboarding.
- * Main (tabs) navigator will be added as a sibling route by its own
- * sub-issue, followed by navigation guards to control which one is
- * mounted based on auth/first-access state.
+ * Root param list hosting all three top-level navigators. Navigation
+ * guards (a later sub-issue of #8) will determine which of Onboarding /
+ * Auth / Main is actually reachable at a given time based on first-access
+ * and authentication state.
  */
 export type RootStackParamList = {
     Auth: NavigatorScreenParams<AuthStackParamList>;
     Onboarding: NavigatorScreenParams<OnboardingStackParamList>;
+    Main: NavigatorScreenParams<MainTabParamList>;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =
