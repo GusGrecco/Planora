@@ -1,11 +1,11 @@
 /**
- * Design tokens — single source of truth for Planora's design system.
- * Consumed by tailwind.config.js (className-based styling via NativeWind)
- * and by app code directly (for style props NativeWind cannot express,
- * e.g. RN shadow/elevation, third-party `color`/`size` props).
- *
- * Dark mode is not defined yet — only the light palette exists so far.
- */
+* Design tokens — single source of truth for Planora's design system.
+* Consumed by tailwind.config.js (className-based styling via NativeWind)
+* and by app code directly (for style props NativeWind cannot express,
+* e.g. RN shadow/elevation, third-party `color`/`size` props).
+*
+* Dark mode is not defined yet — only the light palette exists so far.
+*/
 
 const colors = {
     text: "#090a0b",
@@ -13,14 +13,8 @@ const colors = {
     primary: "#44BBA4",
     secondary: "#7cc5fe",
     accent: "#eeccfa",
-    // Not part of the original palette — added to support error/success
-    // feedback states consistently (Input, ErrorState, Toast).
     danger: "#f94144",
     success: "#00af54",
-    // Neutral scale — not part of the palette provided so far, added to
-    // support borders, disabled states, and muted text without hardcoding
-    // grays ad hoc across components. Revisit if a formal neutral scale is
-    // defined later.
     neutral: {
         50: "#f9fafb",
         100: "#f3f4f6",
@@ -45,9 +39,23 @@ const fontSize = {
     "3xl": 30,
 };
 
-// Base spacing scale, plus named component-sizing values expressed in the
-// same unit so they're usable as Tailwind spacing suffixes too
-// (e.g. `className="h-control-md w-control-md"`).
+const fontFamily = {
+    sans: undefined,
+};
+
+const fontWeight = {
+    regular: "400",
+    medium: "500",
+    semibold: "600",
+    bold: "700",
+};
+
+const lineHeight = {
+    tight: 1.2,
+    normal: 1.4,
+    relaxed: 1.6,
+};
+
 const spacing = {
     xs: 4,
     sm: 8,
@@ -63,8 +71,6 @@ const spacing = {
     "control-lg": 56,
 };
 
-// Same component-sizing values, exposed as plain numbers for places that
-// need a number rather than a className (e.g. `<Ionicons size={...} />`).
 const sizing = {
     icon: { sm: spacing["icon-sm"], md: spacing["icon-md"], lg: spacing["icon-lg"] },
     control: {
@@ -81,49 +87,6 @@ const borderRadius = {
     full: 9999,
 };
 
-// Adiciona ao objeto colors/fontSize/spacing/etc. já existente:
-
-const fontFamily = {
-    // System default for now (San Francisco / Roboto). Swapping to a
-    // custom font later only requires updating these values plus loading
-    // it via useFonts — no consumer of `typography.ts` needs to change.
-    sans: undefined, // undefined = RN falls back to the system font
-};
-
-const fontWeight = /** @type {const} */ ({
-    regular: "400",
-    medium: "500",
-    semibold: "600",
-    bold: "700",
-});
-
-// Expressed as unitless multipliers of fontSize, not fixed px, so line
-// height scales correctly across all fontSize tokens.
-const lineHeight = {
-    tight: 1.2,
-    normal: 1.4,
-    relaxed: 1.6,
-};
-
-module.exports = {
-    colors,
-    fontSize,
-    fontFamily,
-    fontWeight,
-    lineHeight,
-    spacing,
-    sizing,
-    borderRadius,
-    elevation,
-};
-
-/**
- * Elevation levels. React Native has no unified cross-platform shadow API
- * (iOS: shadowColor/shadowOffset/shadowOpacity/shadowRadius; Android:
- * elevation) and NativeWind utility classes cannot reliably express both
- * at once. These are plain style-prop objects meant to be spread onto a
- * component's `style`, not Tailwind classes.
- */
 const elevation = {
     none: {
         shadowColor: "transparent",
@@ -155,4 +118,14 @@ const elevation = {
     },
 };
 
-module.exports = { colors, fontSize, spacing, sizing, borderRadius, elevation };
+module.exports = {
+    colors,
+    fontSize,
+    fontFamily,
+    fontWeight,
+    lineHeight,
+    spacing,
+    sizing,
+    borderRadius,
+    elevation,
+};

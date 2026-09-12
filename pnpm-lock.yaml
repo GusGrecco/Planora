@@ -32,6 +32,9 @@ importers:
       '@nestjs/platform-express':
         specifier: ^12.0.1
         version: 12.0.1(@nestjs/common@12.0.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@12.0.1)
+      '@planora/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@prisma/adapter-pg':
         specifier: ^7.10.0
         version: 7.10.0
@@ -190,6 +193,9 @@ importers:
         specifier: ^5.0.15
         version: 5.0.15(@types/react@19.2.18)(react@19.2.3)(use-sync-external-store@1.7.0(react@19.2.3))
     devDependencies:
+      '@planora/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       '@types/react':
         specifier: ~19.2.2
         version: 19.2.18
@@ -208,6 +214,12 @@ importers:
       vitest:
         specifier: ^5.0.0
         version: 5.0.0(@types/node@24.13.4)(vite@8.3.0(@types/node@24.13.4)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(tsx@4.23.13)(yaml@2.9.1))
+
+  packages/types:
+    devDependencies:
+      typescript:
+        specifier: ~6.0.3
+        version: 6.0.3
 
 packages:
 
