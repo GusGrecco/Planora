@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule, ObserveInstrument } from './app.module.js';
+import {} from "@planora/types";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
