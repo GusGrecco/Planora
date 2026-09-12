@@ -1,8 +1,19 @@
 const { getDefaultConfig } = require("expo/metro-config");
 const { withNativeWind } = require("nativewind/metro");
+const path = require("path");
 
-const config = getDefaultConfig(__dirname);
+const projectRoot = __dirname;
+const workspaceRoot = path.resolve(projectRoot, "../..");
 
-module.exports = withNativeWind(config, {
-    input: "./global.css",
-});
+const config = getDefaultConfig(projectRoot);
+
+// Monorepo support: resolve modules from both the app and the
+// workspace root, and watch the whole workspace for changes in
+// shared packages (e.g. @planora/types).
+config.watchFolders = [workspaceRoot];
+config.resolver.nodeModulesPaths = [
+    path.resolve(projectRoot, "node_modules"),
+    path.resolve(workspaceRoot, "node_modules"),
+];
+
+module.exports = withNativeWind(config, { input: "./global.css" });
