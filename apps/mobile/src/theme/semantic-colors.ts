@@ -1,6 +1,6 @@
 import { colors } from "./tokens";
 
-export type SemanticColor = "default" | "muted" | "primary" | "inverse";
+export type SemanticColor = "default" | "muted" | "primary" | "inverse" | "danger" | "success";
 
 /**
  * Shared semantic color mapping used by any component that exposes a
@@ -13,4 +13,6 @@ export const SEMANTIC_COLOR_MAP: Record<SemanticColor, string> = {
     muted: colors.neutral[400],
     primary: colors.primary,
     inverse: colors.background,
+    danger: colors.danger,
+    success: colors.success,
 };
