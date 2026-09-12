@@ -11,10 +11,10 @@ import type { MainTabParamList } from "./types";
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
 const TAB_ICONS: Record<keyof MainTabParamList, keyof typeof Ionicons.glyphMap> = {
-  Dashboard: "home",
-  Calendar: "calendar",
-  Templates: "duplicate",
-  Settings: "settings",
+    Dashboard: "home",
+    Calendar: "calendar",
+    Templates: "duplicate",
+    Settings: "settings",
 };
 
 /**
@@ -27,29 +27,29 @@ const TAB_ICONS: Record<keyof MainTabParamList, keyof typeof Ionicons.glyphMap> 
  * navigation guards, implemented in a later sub-issue of #8.
  */
 export function MainNavigator() {
-  return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        headerShown: false,
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.tabInactive,
-        tabBarIcon: ({ color, size, focused }) => (
-          <Ionicons
-            name={
-              focused
-                ? TAB_ICONS[route.name]
-                : (`${TAB_ICONS[route.name]}-outline` as keyof typeof Ionicons.glyphMap)
-            }
-            size={size}
-            color={color}
-          />
-        ),
-      })}
-    >
-      <Tab.Screen name="Dashboard" component={DashboardNavigator} />
-      <Tab.Screen name="Calendar" component={CalendarNavigator} />
-      <Tab.Screen name="Templates" component={TemplatesNavigator} />
-      <Tab.Screen name="Settings" component={SettingsNavigator} />
-    </Tab.Navigator>
-  );
+    return (
+        <Tab.Navigator
+            screenOptions={({ route }) => ({
+                headerShown: false,
+                tabBarActiveTintColor: colors.primary,
+                tabBarInactiveTintColor: colors.tabInactive,
+                tabBarIcon: ({ color, size, focused }) => (
+                    <Ionicons
+                        name={
+                            focused
+                                ? TAB_ICONS[route.name]
+                                : (`${TAB_ICONS[route.name]}-outline` as keyof typeof Ionicons.glyphMap)
+                        }
+                        size={size}
+                        color={color}
+                    />
+                ),
+            })}
+        >
+            <Tab.Screen name="Dashboard" component={DashboardNavigator} />
+            <Tab.Screen name="Calendar" component={CalendarNavigator} />
+            <Tab.Screen name="Templates" component={TemplatesNavigator} />
+            <Tab.Screen name="Settings" component={SettingsNavigator} />
+        </Tab.Navigator>
+    );
 }

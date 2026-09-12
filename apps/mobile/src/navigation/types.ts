@@ -3,19 +3,19 @@ import type { NavigatorScreenParams } from "@react-navigation/native";
 
 import type { AuthStackParamList } from "./auth/types";
 import type { MainTabParamList } from "./main/types";
+import type { ModalStackParamList } from "./modals/types";
 import type { OnboardingStackParamList } from "./onboarding/types";
 
 /**
- * Root param list hosting all three top-level navigators. Navigation
- * guards (a later sub-issue of #8) will determine which of Onboarding /
- * Auth / Main is actually reachable at a given time based on first-access
- * and authentication state.
+ * Root param list. Onboarding, Auth, and Main are mutually exclusive
+ * "areas" of the app (controlled by navigation guards). Modal routes are
+ * layered on top of whichever area is active, reachable from anywhere.
  */
 export type RootStackParamList = {
     Auth: NavigatorScreenParams<AuthStackParamList>;
     Onboarding: NavigatorScreenParams<OnboardingStackParamList>;
     Main: NavigatorScreenParams<MainTabParamList>;
-};
+} & ModalStackParamList;
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =
     NativeStackScreenProps<RootStackParamList, T>;
