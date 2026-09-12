@@ -2,11 +2,13 @@ import { Button, StyleSheet, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
+import { useSessionStore } from "../../../state/session-store";
 import type { RootStackParamList } from "../../types";
 import type { AuthStackScreenProps } from "../types";
 
 export function LoginScreen({ navigation }: AuthStackScreenProps<"Login">) {
     const rootNavigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+    const signIn = useSessionStore((state) => state.signIn);
 
     return (
         <View style={styles.container}>
@@ -19,17 +21,13 @@ export function LoginScreen({ navigation }: AuthStackScreenProps<"Login">) {
                 title="Create account"
                 onPress={() => navigation.navigate("Register")}
             />
-            {/* Temporary: bypasses real authentication to validate that Main is
-            reachable. Will be removed once auth business logic + guards
-          exist. */}
+            {/* Temporary: bypasses real authentication to validate that Main
+          becomes reachable once isAuthenticated flips. Will be removed
+          once auth business logic exists (Phase 2). */}
+            <Button title="(dev) Enter app" onPress={signIn} />
             <Button
-                title="(dev) Enter app"
-                onPress={() =>
-                    rootNavigation.navigate("Main", {
-                        screen: "Dashboard",
-                        params: { screen: "DashboardHome" },
-                    })
-                }
+                title="(dev) Open example modal"
+                onPress={() => rootNavigation.navigate("ExampleModal")}
             />
         </View>
     );
