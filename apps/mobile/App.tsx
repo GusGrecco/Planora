@@ -6,8 +6,10 @@ import { ErrorBoundary } from "./src/app/error-boundary";
 import { GlobalErrorListener } from "./src/app/error-handling/global-error-listener";
 import { RootNavigator } from "./src/navigation/root-navigator";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { QueryProvider } from "./src/app/providers/query-provider";
-import { NavigationProvider } from "./src/app/providers/navigation-provider";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { NavigationContainer } from "@react-navigation/native";
+import { ToastHost } from "./src/components/base/feedback/toast-host";
+import { queryClient } from "./src/lib/query-client";
 
 console.log(">>> REAL APP MODULE LOADED");
 
@@ -17,13 +19,14 @@ export default function App() {
     <ErrorBoundary>
       <GlobalErrorListener>
         <SafeAreaProvider>
-          <QueryProvider>
-            <NavigationProvider>
+          <QueryClientProvider client={queryClient}>
+            <NavigationContainer>
               <AppLoadingGate>
                 <RootNavigator />
               </AppLoadingGate>
-            </NavigationProvider>
-          </QueryProvider>
+              <ToastHost />
+            </NavigationContainer>
+          </QueryClientProvider>
         </SafeAreaProvider>
       </GlobalErrorListener>
       <StatusBar style="auto" />

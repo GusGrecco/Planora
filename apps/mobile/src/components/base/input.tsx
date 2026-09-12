@@ -29,11 +29,7 @@ export function Input({
 }: InputProps) {
     const [isFocused, setIsFocused] = useState(false);
 
-    const borderColor = error
-        ? "#dc2626"
-        : isFocused
-            ? colors.primary
-            : colors.neutral[300];
+const borderColor = error ? colors.danger : isFocused ? colors.primary : colors.neutral[300];
 
     return (
         <Stack gap="xs">
@@ -71,7 +67,7 @@ export function Input({
             </View>
 
             {error ? (
-                <Text variant="caption" style={{ color: "#dc2626" }}>
+                <Text variant="caption" color="danger">
                     {error}
                 </Text>
             ) : helperText ? (

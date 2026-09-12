@@ -13,6 +13,10 @@ const colors = {
     primary: "#44BBA4",
     secondary: "#7cc5fe",
     accent: "#eeccfa",
+    // Not part of the original palette — added to support error/success
+    // feedback states consistently (Input, ErrorState, Toast).
+    danger: "#f94144",
+    success: "#00af54",
     // Neutral scale — not part of the palette provided so far, added to
     // support borders, disabled states, and muted text without hardcoding
     // grays ad hoc across components. Revisit if a formal neutral scale is
