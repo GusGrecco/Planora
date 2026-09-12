@@ -1,27 +1,13 @@
 import { Text as RNText, type TextProps as RNTextProps } from "react-native";
 
-import { colors } from "../../theme/tokens";
+import { SEMANTIC_COLOR_MAP, type SemanticColor } from "../../theme/semantic-colors";
 import { typography, type TypographyVariant } from "../../theme/typography";
-
-type TextColor = "default" | "muted" | "primary" | "inverse";
-
-const COLOR_MAP: Record<TextColor, string> = {
-    default: colors.text,
-    muted: colors.neutral[500],
-    primary: colors.primary,
-    inverse: colors.background,
-};
 
 type TextComponentProps = RNTextProps & {
     variant?: TypographyVariant;
-    color?: TextColor;
+    color?: SemanticColor;
 };
 
-/**
- * Base text component. Applies a typography variant (hierarchy) and a
- * semantic color, so feature screens never compose raw fontSize/
- * fontWeight/color values directly.
- */
 export function Text({
     variant = "body",
     color = "default",
@@ -30,7 +16,7 @@ export function Text({
 }: TextComponentProps) {
     return (
         <RNText
-            style={[typography[variant], { color: COLOR_MAP[color] }, style]}
+            style={[typography[variant], { color: SEMANTIC_COLOR_MAP[color] }, style]}
             {...props}
         />
     );

@@ -1,5 +1,6 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
+import { Icon } from "../../components/base/icon";
 
 import { colors, sizing } from "../../theme/tokens";
 import { CalendarNavigator } from "./calendar/calendar-navigator";
@@ -33,15 +34,15 @@ export function MainNavigator() {
                 headerShown: false,
                 tabBarActiveTintColor: colors.primary,
                 tabBarInactiveTintColor: colors.neutral[400],
-                tabBarIcon: ({ color, focused }) => (
-                    <Ionicons
+                tabBarIcon: ({ focused }) => (
+                    <Icon
                         name={
                             focused
                                 ? TAB_ICONS[route.name]
                                 : (`${TAB_ICONS[route.name]}-outline` as keyof typeof Ionicons.glyphMap)
                         }
-                        size={sizing.icon.md}
-                        color={color}
+                        size="md"
+                        color={focused ? "primary" : "muted"}
                     />
                 ),
             })}
