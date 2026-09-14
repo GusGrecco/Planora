@@ -13,3 +13,9 @@ export * from "./domain/reminder";
 export * from "./enums/task-status";
 export * from "./enums/task-priority";
 export * from "./enums/reminder-status";
+
+export * from "./contracts/common";
+export * from "./contracts/auth";
+export * from "./contracts/task";
+export * from "./contracts/template";
+export * from "./contracts/reminder";
