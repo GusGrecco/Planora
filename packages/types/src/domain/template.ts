@@ -2,12 +2,14 @@
  * A reusable task structure preset — not a recurring schedule. Using a
  * template creates a new Task (and its subtasks) from this definition.
  */
+import type { TaskPriority } from "../enums/task-priority";
+
 export type Template = {
     id: string;
     userId: string;
     name: string;
     description: string | null;
-    priority: import("./task").TaskPriority;
+    priority: TaskPriority;
     createdAt: string;
     updatedAt: string;
 };

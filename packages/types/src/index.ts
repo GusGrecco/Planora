@@ -9,3 +9,7 @@ export * from "./domain/task";
 export * from "./domain/subtask";
 export * from "./domain/template";
 export * from "./domain/reminder";
+
+export * from "./enums/task-status";
+export * from "./enums/task-priority";
+export * from "./enums/reminder-status";

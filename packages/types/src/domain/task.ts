@@ -4,8 +4,8 @@
  * Enums) — Task/Subtask will import from there instead once it lands,
  * without changing this type's shape.
  */
-export type TaskStatus = "TODO" | "DOING" | "DONE";
-export type TaskPriority = "LOW" | "MEDIUM" | "HIGH";
+import type { TaskPriority } from "../enums/task-priority";
+import type { TaskStatus } from "../enums/task-status";
 
 /**
  * A unit of work belonging to a user. May have subtasks (see
