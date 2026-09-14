@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "@planora/types": "workspace:*",
+    "@planora/validation": "workspace:*",
     "@types/react": "~19.2.2",
     "drizzle-kit": "^0.31.10",
     "prettier": "^3.9.6",
