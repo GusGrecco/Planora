@@ -452,7 +452,34 @@ git status
 
 The working tree should be clean unless there are intentional changes.
 
-## 18. Mobile Environment Variables
+## 18. API Environment Variables
+
+Planora API validates its environment at startup using Zod
+(`src/config/env.validation.ts`). An invalid or missing required
+variable throws during bootstrap — the API never starts listening
+with invalid configuration.
+
+### Setup
+
+1. Copy `apps/api/.env.example` to `apps/api/.env`.
+2. Adjust values for your local environment.
+
+### Required variables
+
+| Variable       | Description                          | Default       |
+|-----------------|---------------------------------------|-----------------|
+| `PORT`           | Port the API listens on               | `3000`          |
+| `DATABASE_URL`   | PostgreSQL connection string          | *(required)*    |
+| `NODE_ENV`       | Runtime environment                   | `development`   |
+
+### Rules
+
+- Never commit `.env`. Commit `.env.example` instead.
+- Values are validated at startup via `src/config/env.validation.ts`
+  (Zod) — the API fails fast with a clear error if a required
+  variable is missing or invalid, before it starts listening.
+
+## 19. Mobile Environment Variables
 
 Planora mobile uses Expo's built-in `.env` support (no additional library required).
 
@@ -484,7 +511,7 @@ variables, prefixed or not — the bundle can be inspected on device.
 - Production/preview environment strategy (EAS build profiles, secret
   management) is defined in a separate issue.
 
-## 19. Troubleshooting Workflow
+## 20. Troubleshooting Workflow
 
 1. Read the complete error.
 2. Identify the layer: package manager, environment variable, port, Docker, Prisma, TypeScript, Expo, or Git.
