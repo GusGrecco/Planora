@@ -7,7 +7,9 @@ export type ApiErrorResponse = {
     message: string;
     code: string;
     details?: Record<string, unknown>;
+    requestId: string;
 };
+
 
 export type PaginationParams = {
     page?: number;

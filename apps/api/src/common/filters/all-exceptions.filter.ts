@@ -6,19 +6,10 @@ import {
     HttpStatus,
     Logger,
 } from "@nestjs/common";
-import type { Response } from "express";
+import type { Request, Response } from "express";
 
 import type { ApiErrorResponse } from "@planora/types";
 
-/**
- * Global exception filter — the single place where every thrown
- * exception (HttpException or not) is normalized into the
- * ApiErrorResponse shape before reaching the client.
- *
- * Unexpected (non-HttpException) errors are logged with full detail
- * server-side, but only a generic message reaches the client — never
- * a stack trace, driver error message, or internal path.
- */
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
     private readonly logger = new Logger(AllExceptionsFilter.name);
@@ -26,12 +17,14 @@ export class AllExceptionsFilter implements ExceptionFilter {
     catch(exception: unknown, host: ArgumentsHost) {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
+        const request = ctx.getRequest<Request>();
+        const requestId = request.requestId;
 
-        const { status, body } = this.normalize(exception);
+        const { status, body } = this.normalize(exception, requestId);
 
         if (status >= HttpStatus.INTERNAL_SERVER_ERROR) {
             this.logger.error(
-                `Unhandled exception: ${this.describe(exception)}`,
+                `[${requestId}] Unhandled exception: ${this.describe(exception)}`,
                 exception instanceof Error ? exception.stack : undefined,
             );
         }
@@ -39,40 +32,37 @@ export class AllExceptionsFilter implements ExceptionFilter {
         response.status(status).json(body);
     }
 
-    private normalize(exception: unknown): { status: number; body: ApiErrorResponse } {
+    private normalize(
+        exception: unknown,
+        requestId: string,
+    ): { status: number; body: ApiErrorResponse } {
         if (exception instanceof HttpException) {
-            return this.normalizeHttpException(exception);
+            return this.normalizeHttpException(exception, requestId);
         }
-
-        // Extension point for known non-HTTP errors (e.g. Prisma constraint
-        // violations) once a data layer exists — map specific error types
-        // to specific status codes/codes here, following the same
-        // { status, body } shape, instead of falling through to the
-        // generic 500 below.
 
         return {
             status: HttpStatus.INTERNAL_SERVER_ERROR,
             body: {
                 message: "Internal server error",
                 code: "INTERNAL_ERROR",
+                requestId,
             },
         };
     }
 
     private normalizeHttpException(
         exception: HttpException,
+        requestId: string,
     ): { status: number; body: ApiErrorResponse } {
         const status = exception.getStatus();
         const payload = exception.getResponse();
 
-        // Our own ZodValidationPipe (#33) already throws with an
-        // ApiErrorResponse-shaped payload — pass it through as-is.
         if (this.isApiErrorResponse(payload)) {
+            // Already includes requestId (e.g. from ZodValidationPipe) —
+            // pass through as-is.
             return { status, body: payload };
         }
 
-        // Nest's default HttpException payload shape:
-        // { statusCode, message, error } — normalize it.
         const message =
             typeof payload === "string"
                 ? payload
@@ -83,6 +73,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
             body: {
                 message: Array.isArray(message) ? message.join(", ") : message,
                 code: this.codeFromStatus(status),
+                requestId,
             },
         };
     }
@@ -92,7 +83,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
             typeof payload === "object" &&
             payload !== null &&
             "message" in payload &&
-            "code" in payload
+            "code" in payload &&
+            "requestId" in payload
         );
     }
 
