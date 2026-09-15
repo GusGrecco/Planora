@@ -3,6 +3,7 @@ import { VersioningType } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 
 import { AppModule } from "./app.module.js";
+import { AllExceptionsFilter } from "./common/filters/all-exceptions.filter.js";
 import { ZodValidationPipe } from "./common/validation/zod-validation.pipe.js";
 import type { Env } from "./config/env.validation.js";
 
@@ -17,6 +18,7 @@ async function bootstrap() {
 
   app.enableCors();
   app.useGlobalPipes(new ZodValidationPipe());
+  app.useGlobalFilters(new AllExceptionsFilter());
 
   const configService = app.get(ConfigService<Env, true>);
   const port = configService.get("PORT", { infer: true });
