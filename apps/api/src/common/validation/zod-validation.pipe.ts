@@ -1,20 +1,21 @@
-import { BadRequestException, Injectable, type ArgumentMetadata, type PipeTransform } from "@nestjs/common";
+import {
+    BadRequestException,
+    Inject,
+    Injectable,
+    Scope,
+    type ArgumentMetadata,
+    type PipeTransform,
+} from "@nestjs/common";
+import { REQUEST } from "@nestjs/core";
+import type { Request } from "express";
 import type { ZodSchema } from "zod";
 
 import type { ApiErrorResponse } from "@planora/types";
 
-/**
- * Global validation pipe. Applies to every route parameter (body,
- * query, param) whose declared type is a DTO created via createZodDto.
- * Parameters without an attached schema (e.g. primitive types, plain
- * objects) pass through unchanged.
- *
- * Validated data is also transformed: Zod's default object behavior
- * strips unknown keys, and z.coerce (used in query/param DTOs) converts
- * string inputs (e.g. query params) into the expected type.
- */
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class ZodValidationPipe implements PipeTransform {
+    constructor(@Inject(REQUEST) private readonly request: Request) { }
+
     transform(value: unknown, metadata: ArgumentMetadata) {
         const schema = this.getSchema(metadata);
 
@@ -29,6 +30,7 @@ export class ZodValidationPipe implements PipeTransform {
                 message: "Validation failed",
                 code: "VALIDATION_ERROR",
                 details: { issues: result.error.issues },
+                requestId: this.request.requestId,
             };
             throw new BadRequestException(errorResponse);
         }
